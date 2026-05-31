@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "decoder.h"
+#include "hash-table.h"
 
 /*
 TOKENS TYPE!
@@ -12,7 +13,13 @@ TOKENS TYPE!
 */
 
 char *decoder(char **encoded_text) {
-    
+    load_entities();
+
+    /*
+    Implementação do decodificador
+    */
+
+    free_entities();
 }
 
 char decode_html_hexadecimal(char *token) { // Decodifica tokens do tipo HTML HEXADECIMAL: &#x26;
@@ -37,4 +44,11 @@ char decode_char_sequence(char *token) { // Decodifica tokens do tipo CHAR SEQUE
     long value = strtol(token + 5, NULL, 10);
 
     return (char) value;
+}
+
+char *decode_html_entity(char *token) { // Decodifica tokens do tipo HTML ENTITY baseado na tabela hash: &copy;
+    /*
+    Retornando assim um ponteiro pro primeiro endereço da entidade, a entidade não é um character pois ocupa mais de um byte na memória
+    */
+    return hash_get(token);
 }
