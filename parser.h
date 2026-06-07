@@ -1,6 +1,11 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-char **parsing(int size, char *string, int *count);
+struct parser {
+    char data[20];
+    int type;
+};
+
+struct parser *parsing(int size, char *string, int *count);
 
 #endif

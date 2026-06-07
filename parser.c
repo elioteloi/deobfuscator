@@ -2,12 +2,23 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+#define PERCENT 0
+#define HTML 1
+#define CHAR 2
+#define LETTER 3
 
-char **parsing(int size, char *string, int *count) {
+struct parser {
+    char data[20];
+    int type;
+};
 
-    char **arr = malloc(size * sizeof(char *));
 
-    int arrIndex = 0;
+
+struct parser *parsing(int size, char *string, int *count) {
+
+    struct parser *parsers = malloc(100 * sizeof(struct parser));
+
+    int parserIndex = 0;
 
     for (char *p = string; *p != '\0'; p++) {
 
@@ -26,10 +37,12 @@ char **parsing(int size, char *string, int *count) {
                 num++;
 
                 if(num == 3) {
-                    pEncoding[num] = '\0';
-                    arr[arrIndex] = malloc(10);
-                    strcpy(arr[arrIndex], pEncoding);
-                    arrIndex++;
+                   pEncoding[num] = '\0';
+
+                    strcpy(parsers[parserIndex].data, pEncoding);
+                    parsers[parserIndex].type = PERCENT;
+
+                    parserIndex++;
                     break;
                 }
 
@@ -49,9 +62,11 @@ char **parsing(int size, char *string, int *count) {
                 num++;
                 if(c == ';') {
                     htmlEntity[num] = '\0';
-                    arr[arrIndex] = malloc(10);
-                    strcpy(arr[arrIndex], htmlEntity);
-                    arrIndex++;
+
+                    strcpy(parsers[parserIndex].data, htmlEntity);
+                    parsers[parserIndex].type = HTML;
+
+                    parserIndex++;
                     break;
                 }
 
@@ -71,10 +86,12 @@ char **parsing(int size, char *string, int *count) {
                 num++;
                 if(c == ')') {
                     charSeq[num] = '\0';
-                    arr[arrIndex] = malloc(10);
-                    strcpy(arr[arrIndex], charSeq);
-                    arrIndex++;
-                    
+
+
+                    strcpy(parsers[parserIndex].data, charSeq);
+                    parsers[parserIndex].type = PERCENT;
+
+                    parserIndex++;
                     break;
                 }
             }
@@ -84,15 +101,14 @@ char **parsing(int size, char *string, int *count) {
             char letter[2];
             letter[0] = *p;
             letter[1] = '\0';
-            arr[arrIndex] = malloc(10);
-            strcpy(arr[arrIndex], letter);
+            
+            strcpy(parsers[parserIndex].data, letter);
+            parsers[parserIndex].type = LETTER;
 
-            arrIndex++;
-
+            parserIndex++;
         }
     }
-    
-    *count = arrIndex;
-    return arr;
 
+    *count = parserIndex;
+    return parsers;
 }
