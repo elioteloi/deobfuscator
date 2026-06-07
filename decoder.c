@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
-
-char **decoder(int size, char **string, int *count) {
-    for(int i = 0; i < *count; i++) {
-        printf("data: %s\n", string[i]);
-    }
-=======
 #include <stdlib.h>
 
 #include "decoder.h"
@@ -62,5 +51,4 @@ char *decode_html_entity(char *token) { // Decodifica tokens do tipo HTML ENTITY
     Retornando assim um ponteiro pro primeiro endereço da entidade, a entidade não é um character pois ocupa mais de um byte na memória
     */
     return hash_get(token);
->>>>>>> ae87aded6e04df0a0d9493637c8600fbb82e591b
 }
