@@ -1,6 +1,9 @@
-#ifndef DECODER_H
-#define DECODER_H
+char *decoder(char **encoded_text);
 
-char **decoder(int size, char *string, int *count);
+char decode_html_hexadecimal(char *token);
 
-#endif
+char decode_percent_encouding(char *token);
+
+char decode_html_decimal(char *token);
+
+char decode_char_sequence(char *token);
