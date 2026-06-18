@@ -1,20 +1,20 @@
 #include <stdio.h>
-#include <ctype.h>
-#include <string.h>
 #include <stdlib.h>
 
 #include "parser.h"
 #include "decoder.h"
 
-#define SIZE 62
+// COMANDO DE COMPILAÇÃO: gcc main.c parser.c decoder.c hash-table.c -o main
 
 int main(void) {
 
-    char line[SIZE] = "&copy;&trade;H%65&#108;l&#x6F;%20WCHAR(111)char(55)r&#108;d";
+    char line[] = "&copy;%20The&#32;quick&#x20;brown%20fox%20CHAR(106)umps&#32;over%20the&#x20;lazy%20char(100)og&trade;%20&plusmn;%20done&#33;";
+    
+    int length = sizeof(line) - 1;
 
     int parserIndex;
 
-    struct parser *result = parsing(SIZE, line, &parserIndex);
+    Token *result = parsing(length, line, &parserIndex);
 
 
     for(int i = 0; i < parserIndex; i++) {
@@ -22,6 +22,15 @@ int main(void) {
     }
 
     printf("length: %d\n", parserIndex);
+
+    char *decodedText = decoder(result, parserIndex);
+
+    if(decodedText != NULL) {
+        printf("decoded: %s\n", decodedText);
+        free(decodedText);
+    }
     
     free(result);
 }
+
+// COMANDO DE COMPILAÇÃO: gcc main.c parser.c decoder.c hash-table.c -o main

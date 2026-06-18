@@ -1,22 +1,12 @@
 #include <stdio.h>
-#include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
-#define PERCENT 0
-#define HTML 1
-#define CHAR 2
-#define LETTER 3
 
-struct parser {
-    char data[20];
-    int type;
-};
+#include "parser.h"
 
+Token *parsing(int size, char *string, int *count) {
 
-
-struct parser *parsing(int size, char *string, int *count) {
-
-    struct parser *parsers = malloc(100 * sizeof(struct parser));
+    Token *parsers = malloc(100 * sizeof(Token));
 
     int parserIndex = 0;
 
@@ -30,8 +20,7 @@ struct parser *parsing(int size, char *string, int *count) {
 
             int num = 0;
             
-            for (*p; p < string + size; p++) {
-                char c = (char)*p;
+            for (; p < string + size; p++) {
                 pEncoding[num] = *p;
 
                 num++;
@@ -54,7 +43,7 @@ struct parser *parsing(int size, char *string, int *count) {
             int num = 0;
             char htmlEntity[10];
 
-            for (*p; p < string + size; p++) {
+            for (; p < string + size; p++) {
 
                 char c = (char)*p;
                 htmlEntity[num] = *p;
@@ -73,12 +62,12 @@ struct parser *parsing(int size, char *string, int *count) {
             }
 
         // char()
-        } else if(*p == 'c' && *(p + 1) == 'h' && *(p + 2) == 'a' && *(p + 3) == 'r' && *(p + 4) == '(' || *p == 'C' && *(p + 1) == 'H' && *(p + 2) == 'A' && *(p + 3) == 'R' && *(p + 4) == '(' ) {
+        } else if((*p == 'c' && *(p + 1) == 'h' && *(p + 2) == 'a' && *(p + 3) == 'r' && *(p + 4) == '(') || (*p == 'C' && *(p + 1) == 'H' && *(p + 2) == 'A' && *(p + 3) == 'R' && *(p + 4) == '(')) {
             int num = 0;
 
             char charSeq[10];
 
-            for (*p; p < string + size; p++) {
+            for (; p < string + size; p++) {
 
                 char c = (char)*p;
                 charSeq[num] = *p;
@@ -89,7 +78,7 @@ struct parser *parsing(int size, char *string, int *count) {
 
 
                     strcpy(parsers[parserIndex].data, charSeq);
-                    parsers[parserIndex].type = PERCENT;
+                    parsers[parserIndex].type = CHAR;
 
                     parserIndex++;
                     break;
