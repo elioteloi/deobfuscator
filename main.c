@@ -8,13 +8,34 @@
 
 int main(void) {
 
-    char line[] = "&copy;%20The&#32;quick&#x20;brown%20fox%20CHAR(106)umps&#32;over%20the&#x20;lazy%20char(100)og&trade;%20&plusmn;%20done&#33;";
+    // pointer to access the file and read it
+    FILE *fptr = fopen("filename.txt", "r");
+
+    // find the end of the file to see size
+    fseek(fptr, 0, SEEK_END);
+
+    // add size to variable 
+    long size = ftell(fptr);
+
+    // put cursor to the beginning of the file
+    rewind(fptr);
+
+
+    // allocate array to the data and add plus for the end of the file
+    char line[size + 1];
+
+    // read the file and add it to the variable
+    fread(line, 1, size, fptr);
+
+    // close the memory address resource
+    fclose(fptr);
+
+
     
-    int length = sizeof(line) - 1;
 
     int parserIndex;
 
-    Token *result = parsing(length, line, &parserIndex);
+    Token *result = parsing(size, line, &parserIndex);
 
 
     for(int i = 0; i < parserIndex; i++) {
@@ -27,6 +48,18 @@ int main(void) {
 
     if(decodedText != NULL) {
         printf("decoded: %s\n", decodedText);
+
+        FILE *fptr;
+
+        // Open a file to write it
+        fptr = fopen("filename.txt", "w");
+
+        // Write some text to the file
+        fputs(decodedText, fptr);
+
+        // close the memory address resource
+        fclose(fptr);
+
         free(decodedText);
     }
     
